@@ -16,7 +16,7 @@ class ARExperience{
                 0.1,
                 100
             )
-            this.camera.position.set(5,5,5)
+            this.camera.position.set(1,1,1)
             this.camera.lookAt(new THREE.Vector3())
             this.scene.add(this.camera)
             this.renderer = new THREE.WebGLRenderer(
@@ -52,16 +52,15 @@ class ARExperience{
     }
 
     move() {
-        
 
         if(this.frame % 30 == 0){
-            const geometry = new THREE.SphereGeometry( 0.05, 32, 16 );
+            const geometry = new THREE.SphereGeometry( 0.1, 32, 16 );
             const material = new THREE.MeshBasicMaterial( { color: 0xfff } );
             this.spheres.push(new THREE.Mesh( geometry, material ));
             this.scene.add( this.spheres[this.spheres.length - 1] );
-            this.spheres[this.spheres.length - 1].position.x = Math.random() * (0 + 0.6) - 0.6;
+            this.spheres[this.spheres.length - 1].position.x = Math.random() * (0 + 2) - 2;
             this.spheres[this.spheres.length - 1].position.y = 0;
-            this.spheres[this.spheres.length - 1].position.z = Math.random() * (0 + 0.6) - 0.6;
+            this.spheres[this.spheres.length - 1].position.z = Math.random() * (0 + 2) - 2;
         }
 
         this.frame += 1;
