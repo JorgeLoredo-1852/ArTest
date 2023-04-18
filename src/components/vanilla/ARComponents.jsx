@@ -3,10 +3,12 @@ import ARExperience from "./Experience"
 
 const ARComponents = () => {
     const arExperience = new ARExperience()
+
     useEffect(() => {
         arExperience.initScene()
         arExperience.setupARExperience()
-        arExperience.loadModel()
+        //arExperience.loadModel()
+        var interval = setInterval(() => { arExperience.move()}, 100);
     }, [])
     return (
         <div

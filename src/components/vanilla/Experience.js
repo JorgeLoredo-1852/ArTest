@@ -40,11 +40,23 @@ class ARExperience{
             this.scene.add(drLight)
             const al = new THREE.AmbientLight(0xffffff, 0.4)
             this.scene.add(al)
+
+
+            this.speed = 10
+            const geometry = new THREE.SphereGeometry( 0.2, 32, 16 );
+            const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+            this.sphere = new THREE.Mesh( geometry, material );
+            this.scene.add( this.sphere );
+
     
             
             window.addEventListener('resize', this.resize.bind(this))
         }
     }
+
+    move() {
+        this.sphere.translateY( 0.05 );
+      }
 
     setupARExperience(){
         this.renderer.xr.enabled = true
