@@ -43,19 +43,19 @@ class ARExperience{
 
 
             this.speed = 10
-            const geometry = new THREE.SphereGeometry( 0.2, 32, 16 );
-            const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+            const geometry = new THREE.SphereGeometry( 0.05, 32, 16 );
+            const material = new THREE.MeshBasicMaterial( { color: 0xfff } );
             this.sphere = new THREE.Mesh( geometry, material );
             this.scene.add( this.sphere );
 
-    
+            //document.getElementById('ARButton').onclick = ()=>{this.move()}
             
             window.addEventListener('resize', this.resize.bind(this))
         }
     }
 
     move() {
-        this.sphere.translateY( 0.05 );
+        this.sphere.translateY( 0.01 );
       }
 
     setupARExperience(){
@@ -75,6 +75,7 @@ class ARExperience{
 
         this.container.appendChild(
             ARButton.createButton(this.renderer)
+
         )
         console.log(document.querySelector("canvas"))
 
@@ -85,7 +86,7 @@ class ARExperience{
         gltfLoader.load("./models/amongus.glb", (gltf) => {
             this.scene.add(gltf.scene)
         })
-        console.log(document.querySelector('canvas'))
+        //console.log(document.querySelector('canvas'))
     }
 
     initScene(){
