@@ -16,7 +16,7 @@ class ARExperience{
                 0.1,
                 100
             )
-            this.camera.position.set(2,2,2)
+            this.camera.position.set(0,0,0)
             this.camera.lookAt(new THREE.Vector3())
             this.scene.add(this.camera)
             this.renderer = new THREE.WebGLRenderer(
