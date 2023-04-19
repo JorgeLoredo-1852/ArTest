@@ -7,7 +7,7 @@ const ARComponents = () => {
     useEffect(() => {
         arExperience.initScene()
         arExperience.setupARExperience()
-        arExperience.loadModel()
+        //arExperience.loadModel()
         var interval = setInterval(() => { arExperience.move()}, 200);
     }, [])
     return (
