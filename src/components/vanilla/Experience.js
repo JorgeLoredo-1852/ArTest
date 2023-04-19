@@ -48,6 +48,56 @@ class ARExperience{
             //document.getElementById('ARButton').onclick = ()=>{this.move()}
             
             window.addEventListener('resize', this.resize.bind(this))
+
+            
+            var canvas = document.querySelector('canvas');
+
+
+
+
+            this.raycaster = new THREE.Raycaster();
+  this.startPos = new THREE.Vector2();
+  this.endPos = new THREE.Vector2();
+
+var canvas = document.createElement('canvas');
+  canvas.addEventListener('mousedown touchstart', function(event) {
+  	if ('ontouchstart' in window) {
+    	console.log(event.originalEvent.touches);
+    	var cx = event.originalEvent.touches[0].clientX;
+      var cy = event.originalEvent.touches[0].clientY;
+    } else {
+    	var cx = event.clientX;
+      var cy = event.clientY;
+    }
+    this.startPos.x = (cx / window.innerWidth) * 2 - 1;
+    this.startPos.y = -(cy / window.innerHeight) * 2 + 1;
+  });
+
+  canvas.addEventListener('mouseup touchend', function(event) {
+  	if ('ontouchstart' in window) {
+    	console.log(event.originalEvent.touches);
+    	var cx = event.originalEvent.changedTouches[0].clientX;
+      var cy = event.originalEvent.changedTouches[0].clientY;
+    } else {
+    	var cx = event.clientX;
+      var cy = event.clientY;
+    }
+    this.endPos.x = (cx / window.innerWidth) * 2 - 1;
+    this.endPos.y = -(cy / window.innerHeight) * 2 + 1;
+    this.raycaster.setFromCamera(this.endPos, camera);
+    var result = this.raycaster.ray.intersectPlane(plane);
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.x = result.x;
+    mesh.position.y = result.y;
+    mesh.position.z = result.z;
+    mesh.userData.dx = this.endPos.x - this.startPos.x;
+    mesh.userData.dy = this.endPos.y - this.startPos.y;
+    meshes.push(mesh);
+    scene.add(mesh);
+  });
+
+
+
         }
     }
 
@@ -69,6 +119,18 @@ class ARExperience{
           }
       }
 
+      animate() {
+        requestAnimationFrame(animate);
+        for (var i = 0; i < meshes.length; i++) {
+          var mesh = meshes[i];
+          mesh.position.z -= 20;
+          mesh.userData.dy -= 0.03;
+          mesh.position.x += mesh.userData.dx * 20;
+          mesh.position.y += mesh.userData.dy * 20;
+        }
+        render();
+      }
+
     setupARExperience(){
         this.renderer.xr.enabled = true
 
@@ -88,7 +150,6 @@ class ARExperience{
             ARButton.createButton(this.renderer)
 
         )
-        console.log(document.querySelector("canvas"))
 
     }
 
