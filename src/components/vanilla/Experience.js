@@ -58,7 +58,7 @@ class ARExperience{
             const material = new THREE.MeshBasicMaterial( { color: 0x15885155 } );
             this.spheres.push(new THREE.Mesh( geometry, material ));
             this.scene.add( this.spheres[this.spheres.length - 1] );
-            this.spheres[this.spheres.length - 1].position.x = Math.random() * (0.5 + 0.5) - 0.5;
+            this.spheres[this.spheres.length - 1].position.x = Math.random() * (2 + 1) - 1;
             this.spheres[this.spheres.length - 1].position.y = 0;
             this.spheres[this.spheres.length - 1].position.z = Math.random() * (3 - 2) - 2;
         }
