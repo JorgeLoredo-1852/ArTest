@@ -1,10 +1,10 @@
 import React, {useEffect} from "react"
 import ARExperience from "./Experience"
-import ARL3_1 from "../lectures/l3_1"
+import ARL3_9 from "../lectures/l3_9"
 
 
 const ARComponents = () => {
-    const ARExp = new ARL3_1()
+    const ARExp = new ARL3_9()
 
     useEffect(() => {
         ARExp.initScene()
