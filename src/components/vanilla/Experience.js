@@ -37,6 +37,9 @@ class ARExperience{
             this.geometry = new THREE.BoxGeometry( 0.06, 0.06, 0.06 ); 
             this.meshes = [];
 
+            this.frame = 0
+            this.spheres = [];
+
 
             window.addEventListener('resize', this.resize.bind(this) );
         }
@@ -90,8 +93,29 @@ class ARExperience{
         this.meshes.forEach( (mesh) => { 
             mesh.position.set(mesh.position.x * 1.03, mesh.position.y * 1.03, mesh.position.z * 1.03)
         });
+        this.move()
+
         this.renderer.render( this.scene, this.camera );
     }
+
+    move() {
+
+        if(this.frame % 100 == 0){
+            console.log("created balloons")
+            const geometry = new THREE.SphereGeometry( 0.1, 32, 16 );
+            const material = new THREE.MeshBasicMaterial( { color: 0xfff } );
+            this.spheres.push(new THREE.Mesh( geometry, material ));
+            this.scene.add( this.spheres[this.spheres.length - 1] );
+            this.spheres[this.spheres.length - 1].position.x = Math.random() * (2 + 2) - 2;
+            this.spheres[this.spheres.length - 1].position.y = 0;
+            this.spheres[this.spheres.length - 1].position.z = Math.random() * (0 + 2) - 2;
+        }
+
+        this.frame += 1;
+        for (let step = 0; step < this.spheres.length; step++) {
+            this.spheres[step].translateY( 0.004 );
+          }
+      }
 
     loadModel(){
         const gltfLoader = new GLTFLoader();
