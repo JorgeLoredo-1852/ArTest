@@ -1,25 +1,26 @@
 import React, {useEffect} from "react"
 import ARExperience from "./Experience"
+import ARL3_1 from "../lectures/l3_1"
+
 
 const ARComponents = () => {
-    const arExperience = new ARExperience()
+    const ARExp = new ARL3_1()
 
     useEffect(() => {
-        arExperience.initScene()
-        arExperience.setupARExperience()
-        //arExperience.loadModel()
-        var interval = setInterval(() => { arExperience.move()}, 200);
+        ARExp.initScene()
+        ARExp.setupXR()
+        console.log("asdd")
     }, [])
     return (
         <div
             className="container3D"
             style={{
-                marginTop: "100px",
-                width: "100%",
-                height: "100vh"
+                width: "100vw",
+                height: "100vh",
+                overflow: 'hidden'
             }}
         >
-vsdfgbdfhbdgfjnd
+
         </div>
     )
 }

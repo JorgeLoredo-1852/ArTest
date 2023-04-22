@@ -51,7 +51,54 @@ class ARExperience{
 
 
 
-            this.raycaster = new THREE.Raycaster();
+            let geometry = new THREE.SphereGeometry( 0.1, 32, 16 );
+            let material = new THREE.MeshBasicMaterial({
+              color: 0x777777
+            });
+            let meshes = [];
+          
+            let plane = new THREE.Plane(new THREE.Vector3(0, 0, -1), 0);
+          
+            var raycaster = new THREE.Raycaster();
+            var startPos = new THREE.Vector2();
+            var endPos = new THREE.Vector2();
+          
+            // renderer = new THREE.WebGLRenderer();
+            // renderer.setSize(window.innerWidth, window.innerHeight);
+          
+            //document.body.appendChild(renderer.domElement);
+          
+            let el = document.getElementsByTagName("canvas")
+            if(el.length == 1){
+                                //el[0].on('mousedown touchstart', function(event) {
+            
+                el[0].addEventListener('touchstart', function(event) {
+                    if ('ontouchstart' in window) {
+                    console.log(event.originalEvent.touches);
+                    var cx = event.originalEvent.changedTouches[0].clientX;
+                    var cy = event.originalEvent.changedTouches[0].clientY;
+                } else {
+                    console.log("b")
+                    var cx = event.clientX;
+                    var cy = event.clientY;
+                }
+                endPos.x = (cx / window.innerWidth) * 2 - 1;
+                endPos.y = -(cy / window.innerHeight) * 2 + 1;
+                raycaster.setFromCamera(endPos, camera);
+                var result = raycaster.ray.intersectPlane(plane);
+                mesh = new THREE.Mesh(geometry, material);
+                mesh.position.x = result.x;
+                mesh.position.y = result.y;
+                mesh.position.z = result.z;
+                mesh.userData.dx = endPos.x - startPos.x;
+                mesh.userData.dy = endPos.y - startPos.y;
+                this.meshes.push(mesh);
+                this.scene.add(mesh);
+                });
+            }
+
+
+            /*this.raycaster = new THREE.Raycaster();
             this.startPos = new THREE.Vector2();
             this.endPos = new THREE.Vector2();
 
@@ -88,38 +135,24 @@ class ARExperience{
                   scene.add(mesh);
                 })
 
-            }
-            
-
-
-
-  /*canvas.addEventListener('mouseup touchend', function(event) {
-  	if ('ontouchstart' in window) {
-    	console.log(event.originalEvent.touches);
-    	var cx = event.originalEvent.changedTouches[0].clientX;
-      var cy = event.originalEvent.changedTouches[0].clientY;
-    } else {
-    	var cx = event.clientX;
-      var cy = event.clientY;
-    }
-    this.endPos.x = (cx / window.innerWidth) * 2 - 1;
-    this.endPos.y = -(cy / window.innerHeight) * 2 + 1;
-    this.raycaster.setFromCamera(this.endPos, camera);
-    var result = this.raycaster.ray.intersectPlane(plane);
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.x = result.x;
-    mesh.position.y = result.y;
-    mesh.position.z = result.z;
-    mesh.userData.dx = this.endPos.x - this.startPos.x;
-    mesh.userData.dy = this.endPos.y - this.startPos.y;
-    meshes.push(mesh);
-    scene.add(mesh);
-  });*/
-
+            }*/
 
 
         }
     }
+    animate() {
+        if(this.meshes){
+            for (var i = 0; i < this.meshes.length; i++) {
+            var mesh = this.meshes[i];
+            mesh.position.z -= 20;
+            mesh.userData.dy -= 0.03;
+            mesh.position.x += mesh.userData.dx * 20;
+            mesh.position.y += mesh.userData.dy * 20;
+            }
+            render();
+        }
+
+      }
 
     move() {
 
@@ -137,18 +170,6 @@ class ARExperience{
         for (let step = 0; step < this.spheres.length; step++) {
             this.spheres[step].translateY( 0.01 );
           }
-      }
-
-      animate() {
-        requestAnimationFrame(animate);
-        for (var i = 0; i < meshes.length; i++) {
-          var mesh = meshes[i];
-          mesh.position.z -= 20;
-          mesh.userData.dy -= 0.03;
-          mesh.position.x += mesh.userData.dx * 20;
-          mesh.position.y += mesh.userData.dy * 20;
-        }
-        render();
       }
 
     setupARExperience(){
