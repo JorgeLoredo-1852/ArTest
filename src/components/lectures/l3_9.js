@@ -34,7 +34,8 @@ class ARL3_9{
             
             //this.stats = new Stats();
             //document.body.appendChild( this.stats.dom );
-        
+            this.geometry = new THREE.BoxGeometry( 0.06, 0.06, 0.06 ); 
+            this.meshes = [];
 
 
             window.addEventListener('resize', this.resize.bind(this) );
@@ -56,19 +57,19 @@ class ARL3_9{
     setupXR(){
         this.renderer.xr.enabled = true;
         const self = this;
-        let controller
+        let controller;
         function onSelect(){
+            console.log("aaa")
             const material = new THREE.MeshPhongMaterial({
                 color: 0xFFFFFF * Math.random()
             })
             const mesh = new THREE.Mesh(self.geometry, material);
-            mesh.position.set(0,0,-0.3).applyMatrix4(this.controller.matrixWorld);
+            mesh.position.set(0,0,-0.3).applyMatrix4(controller.matrixWorld);
             mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
             self.scene.add(mesh);
             self.meshes.push(mesh)
 
         }
-        const btn = new ARButton(this.renderer)
         controller = this.renderer.xr.getController(0);
         controller.addEventListener('select', onSelect);
         this.scene.add(controller);
@@ -80,10 +81,6 @@ class ARL3_9{
     }
 
     initScene(){
-        this.geometry = new THREE.BoxGeometry( 0.06, 0.06, 0.06 ); 
-        this.meshes = [];
-        
-        
         document.querySelector(".container3D").appendChild(this.container)
         this.renderer.setAnimationLoop(this.render.bind(this))
         console.log("Scene initialized")
