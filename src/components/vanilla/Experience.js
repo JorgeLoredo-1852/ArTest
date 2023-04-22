@@ -49,31 +49,51 @@ class ARExperience{
             
             window.addEventListener('resize', this.resize.bind(this))
 
-            
-            var canvas = document.querySelector('canvas');
-
-
 
 
             this.raycaster = new THREE.Raycaster();
-  this.startPos = new THREE.Vector2();
-  this.endPos = new THREE.Vector2();
+            this.startPos = new THREE.Vector2();
+            this.endPos = new THREE.Vector2();
 
-var canvas = document.createElement('canvas');
-  canvas.addEventListener('mousedown touchstart', function(event) {
-  	if ('ontouchstart' in window) {
-    	console.log(event.originalEvent.touches);
-    	var cx = event.originalEvent.touches[0].clientX;
-      var cy = event.originalEvent.touches[0].clientY;
-    } else {
-    	var cx = event.clientX;
-      var cy = event.clientY;
-    }
-    this.startPos.x = (cx / window.innerWidth) * 2 - 1;
-    this.startPos.y = -(cy / window.innerHeight) * 2 + 1;
-  });
+            
+            const el = document.getElementsByTagName("canvas");
+            console.log(el)
+            if (el.length == 1){
+                el[0].addEventListener("touchstart", function(event){
+                console.log("a")
+                var cx = event.originalEvent.touches[0].clientX;
+                var cy = event.originalEvent.touches[0].clientY;
+                this.startPos.x = (cx / window.innerWidth) * 2 - 1;
+                this.startPos.y = -(cy / window.innerHeight) * 2 + 1;
 
-  canvas.addEventListener('mouseup touchend', function(event) {
+                });
+
+                el[0].addEventListener('touchend', function(event) {
+                    console.log("b")
+                
+                var cx = event.originalEvent.changedTouches[0].clientX;
+                var cy = event.originalEvent.changedTouches[0].clientY;
+
+                  this.endPos.x = (cx / window.innerWidth) * 2 - 1;
+                  this.endPos.y = -(cy / window.innerHeight) * 2 + 1;
+                  this.raycaster.setFromCamera(this.endPos, camera);
+                  var result = this.raycaster.ray.intersectPlane(plane);
+                  mesh = new THREE.Mesh(geometry, material);
+                  mesh.position.x = result.x;
+                  mesh.position.y = result.y;
+                  mesh.position.z = result.z;
+                  mesh.userData.dx = this.endPos.x - this.startPos.x;
+                  mesh.userData.dy = this.endPos.y - this.startPos.y;
+                  meshes.push(mesh);
+                  scene.add(mesh);
+                })
+
+            }
+            
+
+
+
+  /*canvas.addEventListener('mouseup touchend', function(event) {
   	if ('ontouchstart' in window) {
     	console.log(event.originalEvent.touches);
     	var cx = event.originalEvent.changedTouches[0].clientX;
@@ -94,7 +114,7 @@ var canvas = document.createElement('canvas');
     mesh.userData.dy = this.endPos.y - this.startPos.y;
     meshes.push(mesh);
     scene.add(mesh);
-  });
+  });*/
 
 
 
