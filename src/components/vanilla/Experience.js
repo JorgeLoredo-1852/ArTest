@@ -88,7 +88,7 @@ class ARExperience{
 	render( ) {   
         //this.stats.update();
         this.meshes.forEach( (mesh) => { 
-            mesh.position.set(mesh.position.x * 1.01, mesh.position.y * 1.01, mesh.position.z * 1.01)
+            mesh.position.set(mesh.position.x * 1.03, mesh.position.y * 1.03, mesh.position.z * 1.03)
         });
         this.renderer.render( this.scene, this.camera );
     }
