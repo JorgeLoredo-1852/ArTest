@@ -4,7 +4,7 @@ import ARL3_9 from "../lectures/l3_9"
 
 
 const ARComponents = () => {
-    const ARExp = new ARL3_9()
+    const ARExp = new ARExperience()
 
     useEffect(() => {
         ARExp.initScene()
