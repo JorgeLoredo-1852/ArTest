@@ -12,7 +12,7 @@ class ARExperience{
             this.clock = new THREE.Clock();
         
             this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 20 );
-            
+
             this.scene = new THREE.Scene();
             
             this.scene.add( new THREE.HemisphereLight( 0x606060, 0x404040 ) );
@@ -34,11 +34,23 @@ class ARExperience{
             
             //this.stats = new Stats();
             //document.body.appendChild( this.stats.dom );
-            this.geometry = new THREE.BoxGeometry( 0.06, 0.06, 0.06 ); 
+            //this.geometry = new THREE.BoxGeometry( 0.06, 0.06, 0.06 ); 
+            this.geometry = new THREE.SphereGeometry( 0.03, 32, 16 );
+
             this.meshes = [];
+
+
+            //this.directions = [];
+            //this.normal = new THREE.Vector3();
+            //this.relativeVelocity = new THREE.Vector3();
+			this.clock = new THREE.Clock();
+
 
             this.frame = 0
             this.spheres = [];
+
+            const axesHelper = new THREE.AxesHelper( 5 );
+            this.scene.add( axesHelper );
 
 
             window.addEventListener('resize', this.resize.bind(this) );
@@ -68,16 +80,22 @@ class ARExperience{
             const mesh = new THREE.Mesh(self.geometry, material);
             mesh.position.set(0,0,-0.3).applyMatrix4(controller.matrixWorld);
             mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
-            self.scene.add(mesh);
-            self.meshes.push(mesh)
+            console.log(mesh)
 
+            mesh.userData.velocity = new THREE.Vector3();
+			mesh.userData.velocity.x = (mesh.position.x - self.camera.position.x) * 0.05 ;
+			mesh.userData.velocity.y = (mesh.position.y - self.camera.position.y) * 0.05 ;
+			mesh.userData.velocity.z = self.camera.position.z * 0.05;
+            self.scene.add(mesh);
+            self.meshes.push(mesh);
+
+            //self.directions.push(self.camera.position);
         }
         controller = this.renderer.xr.getController(0);
         controller.addEventListener('select', onSelect);
         this.scene.add(controller);
         this.container.appendChild(
             ARButton.createButton(this.renderer)
-
         )
         //this.renderer.setAnimationLoop( this.render.bind(this) );
     }
@@ -90,10 +108,15 @@ class ARExperience{
     
 	render( ) {   
         //this.stats.update();
-        this.meshes.forEach( (mesh) => { 
-            mesh.position.set(mesh.position.x * 1.03, mesh.position.y * 1.03, mesh.position.z * 1.03)
-        });
+        /*for (let step = 0; step < this.meshes.length; step++) {
+            console.log(this.meshes)
+            this.meshes[step].position.set(this.meshes[step].position.x * 1.03, this.meshes[step].position.y * 1.03, this.meshes[step].position.z * 1.03)
+        }*/
+
+        
+
         this.move()
+        this.moveBalls()
 
         this.renderer.render( this.scene, this.camera );
     }
@@ -103,7 +126,9 @@ class ARExperience{
         if(this.frame % 100 == 0){
             console.log("created balloons")
             const geometry = new THREE.SphereGeometry( 0.1, 32, 16 );
-            const material = new THREE.MeshBasicMaterial( { color: 0xfff } );
+            const material = new THREE.MeshPhongMaterial({
+                color: 0xDD2B22
+            })
             this.spheres.push(new THREE.Mesh( geometry, material ));
             this.scene.add( this.spheres[this.spheres.length - 1] );
             this.spheres[this.spheres.length - 1].position.x = Math.random() * (2 + 2) - 2;
@@ -124,6 +149,21 @@ class ARExperience{
         })
         //console.log(document.querySelector('canvas'))
     }
+
+
+    moveBalls() {
+
+        for ( let i = 0; i < this.meshes.length; i ++ ) {
+
+            const object = this.meshes[ i ];
+
+            object.position.x += object.userData.velocity.x;
+            object.position.y += object.userData.velocity.y;
+            object.position.z += object.userData.velocity.z;
+
+        }
+    }
+
 }
 
 
