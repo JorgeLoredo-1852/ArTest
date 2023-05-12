@@ -35,8 +35,6 @@ class ARExperience{
             //this.stats = new Stats();
             //document.body.appendChild( this.stats.dom );
             //this.geometry = new THREE.BoxGeometry( 0.06, 0.06, 0.06 ); 
-            this.geometry = new THREE.SphereGeometry( 0.03, 32, 16 );
-
             this.meshes = [];
 
 
@@ -44,10 +42,12 @@ class ARExperience{
             //this.normal = new THREE.Vector3();
             //this.relativeVelocity = new THREE.Vector3();
 			this.clock = new THREE.Clock();
+            this.controller;
 
 
             this.frame = 0
             this.spheres = [];
+            var cameraVector = new THREE.Vector3(); 
 
             const axesHelper = new THREE.AxesHelper( 5 );
             this.scene.add( axesHelper );
@@ -72,28 +72,35 @@ class ARExperience{
     setupXR(){
         this.renderer.xr.enabled = true;
         const self = this;
-        let controller;
         function onSelect(){
-            const material = new THREE.MeshPhongMaterial({
-                color: 0xFFF111
-            })
-            const mesh = new THREE.Mesh(self.geometry, material);
-            mesh.position.set(0,0,-0.3).applyMatrix4(controller.matrixWorld);
-            mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
-            console.log(mesh)
+            
+            const mesh = new THREE.Mesh(
+                new THREE.SphereGeometry(0.03),
+                new THREE.MeshPhongMaterial({
+                    color: 0xFFF111
+                })
+            )
+
+            mesh.position.set(0,0,-0.3).applyMatrix4(self.controller.matrixWorld);
+            mesh.quaternion.setFromRotationMatrix(self.controller.matrixWorld);
+
+            
+            let xrCamera = self.renderer.xr.getCamera(self.camera)
 
             mesh.userData.velocity = new THREE.Vector3();
 			mesh.userData.velocity.x = (mesh.position.x - self.camera.position.x) * 0.05 ;
 			mesh.userData.velocity.y = (mesh.position.y - self.camera.position.y) * 0.05 ;
 			mesh.userData.velocity.z = self.camera.position.z * 0.05;
+
+
             self.scene.add(mesh);
             self.meshes.push(mesh);
 
             //self.directions.push(self.camera.position);
         }
-        controller = this.renderer.xr.getController(0);
-        controller.addEventListener('select', onSelect);
-        this.scene.add(controller);
+        this.controller = this.renderer.xr.getController(0);
+        this.controller.addEventListener('select', onSelect);
+        this.scene.add(this.controller);
         this.container.appendChild(
             ARButton.createButton(this.renderer)
         )
@@ -113,23 +120,52 @@ class ARExperience{
             this.meshes[step].position.set(this.meshes[step].position.x * 1.03, this.meshes[step].position.y * 1.03, this.meshes[step].position.z * 1.03)
         }*/
 
-        
+
 
         this.move()
         this.moveBalls()
+        this.checkCollisions()
 
         this.renderer.render( this.scene, this.camera );
+    }
+
+    checkCollisions(){
+        for (let dardo = 0; dardo < this.meshes.length; dardo++) {
+            let d = this.meshes[dardo]
+            for (let balloon = 0; balloon < this.spheres.length; balloon++) {
+                let b = this.spheres[balloon]
+                let bMinX = b.position.x - 0.1
+                let bMaxX = b.position.x + 0.1
+
+                let bMinY = b.position.y - 0.1
+                let bMaxY = b.position.y + 0.1
+
+                let bMinZ = b.position.z - 0.1
+                let bMaxZ = b.position.z + 0.1
+
+                if(d.position.x > bMinX && d.position.x < bMaxX){
+                    if(d.position.y > bMinY && d.position.y < bMaxY){
+                        if(d.position.z > bMinZ && d.position.z < bMaxZ){
+                            this.spheres[balloon].material.color.setHex( 0xffffff );
+                        }
+                    }
+                }
+                
+              }
+          }
     }
 
     move() {
 
         if(this.frame % 100 == 0){
-            console.log("created balloons")
             const geometry = new THREE.SphereGeometry( 0.1, 32, 16 );
             const material = new THREE.MeshPhongMaterial({
                 color: 0xDD2B22
             })
-            this.spheres.push(new THREE.Mesh( geometry, material ));
+            const balloon = new THREE.Mesh( geometry, material )
+            balloon.geometry.computeBoundingSphere()
+
+            this.spheres.push(balloon);
             this.scene.add( this.spheres[this.spheres.length - 1] );
             this.spheres[this.spheres.length - 1].position.x = Math.random() * (2 + 2) - 2;
             this.spheres[this.spheres.length - 1].position.y = 0;
