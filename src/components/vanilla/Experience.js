@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { ARButton } from 'three/examples/jsm/webxr/ARButton.js';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
 class ARExperience{
 	constructor(){
@@ -49,6 +50,32 @@ class ARExperience{
             this.spheres = [];
             var cameraVector = new THREE.Vector3(); 
 
+
+
+            // ADD TEXT
+
+
+            let textGeo = new TextGeometry( 'Hello three.js!', {
+                size: 200,
+                height: 5,
+                curveSegments: 12,
+                bevelEnabled: true,
+                bevelThickness: 10,
+                bevelSize: 8,
+                bevelOffset: 0,
+                bevelSegments: 5
+            })
+
+            textGeo.computeBoundingBox();
+            let materials = [
+                new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } ), // front
+                new THREE.MeshPhongMaterial( { color: 0xffffff } ) // side
+            ];
+            let textMesh1 = new THREE.Mesh( textGeo, materials );
+            this.scene.add(textMesh1)
+            
+
+
             const axesHelper = new THREE.AxesHelper( 5 );
             this.scene.add( axesHelper );
 
@@ -56,6 +83,7 @@ class ARExperience{
             window.addEventListener('resize', this.resize.bind(this) );
         }
 	}	
+
     
     resize(){
         const {
