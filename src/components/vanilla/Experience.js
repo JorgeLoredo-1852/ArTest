@@ -53,9 +53,11 @@ class ARExperience{
 
 
             // ADD TEXT
+            this.group = new THREE.Group();
 
+            this.scene.add( group );
 
-            let textGeo = new TextGeometry( 'Hello three.js!', {
+            let textGeo = new TextGeometry( 'Hello World', {
                 size: 50,
                 height: 5,
                 curveSegments: 12,
@@ -68,11 +70,11 @@ class ARExperience{
 
             textGeo.computeBoundingBox();
             let materials = [
-                new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } ), // front
+                new THREE.MeshPhongMaterial( { color: 0xffffff } ), // front
                 new THREE.MeshPhongMaterial( { color: 0xffffff } ) // side
             ];
             let textMesh1 = new THREE.Mesh( textGeo, materials );
-            this.scene.add(textMesh1)
+            this.group.add(textMesh1)
             
 
 
