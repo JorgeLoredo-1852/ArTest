@@ -56,7 +56,7 @@ class ARExperience{
 
 
             let textGeo = new TextGeometry( 'Hello three.js!', {
-                size: 200,
+                size: 50,
                 height: 5,
                 curveSegments: 12,
                 bevelEnabled: true,
