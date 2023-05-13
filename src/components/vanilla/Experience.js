@@ -1,7 +1,10 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { ARButton } from 'three/examples/jsm/webxr/ARButton.js';
-import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+
+import en from './Inter_Bold.json';
 
 class ARExperience{
 	constructor(){
@@ -53,30 +56,9 @@ class ARExperience{
 
 
             // ADD TEXT
-            this.group = new THREE.Group();
-
-            this.scene.add( this.group );
-
-            let textGeo = new TextGeometry( 'Hello World', {
-                size: 50,
-                height: 5,
-                curveSegments: 12,
-                bevelEnabled: true,
-                bevelThickness: 10,
-                bevelSize: 8,
-                bevelOffset: 0,
-                bevelSegments: 5
-            })
-
-            textGeo.computeBoundingBox();
-            let materials = [
-                new THREE.MeshPhongMaterial( { color: 0xffffff } ), // front
-                new THREE.MeshPhongMaterial( { color: 0xffffff } ) // side
-            ];
-            let textMesh1 = new THREE.Mesh( textGeo, materials );
-            this.group.add(textMesh1)
-            
-
+            this.puntaje = 1
+            this.text3D = null
+            this.createText()
 
             const axesHelper = new THREE.AxesHelper( 5 );
             this.scene.add( axesHelper );
@@ -85,7 +67,6 @@ class ARExperience{
             window.addEventListener('resize', this.resize.bind(this) );
         }
 	}	
-
     
     resize(){
         const {
@@ -128,6 +109,9 @@ class ARExperience{
 
             //self.directions.push(self.camera.position);
         }
+
+        this.createText()
+
         this.controller = this.renderer.xr.getController(0);
         this.controller.addEventListener('select', onSelect);
         this.scene.add(this.controller);
@@ -135,6 +119,47 @@ class ARExperience{
             ARButton.createButton(this.renderer)
         )
         //this.renderer.setAnimationLoop( this.render.bind(this) );
+    }
+
+    createText(){
+        const self = this;
+        var loader = new FontLoader();
+        loader.load(
+            '/Inter_Bold.json',
+            function(res) {
+                var textGeo = new TextGeometry(self.puntaje.toString(), {
+                    font: res,
+                    size: 40 / 500,
+                    height: 0.005,
+                    curveSegments: 10,
+                    bevelEnabled: true,
+                    bevelThickness: 1,
+                    bevelSize: 1.8 / 300,
+                    bevelOffset: 0,
+                    bevelSegments: 5,
+                    bevelEnabled: true
+                  });
+                  textGeo.computeBoundingBox();
+                  textGeo.computeVertexNormals();
+
+                  self.scene.remove(self.text3D)
+
+                  var cubeMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
+                  self.text3D = new THREE.Mesh(textGeo, cubeMat);
+                  self.text3D.position.x = -textGeo.boundingBox.max.x / 2;
+                  self.text3D.position.z = -0.3
+                  self.text3D.castShadow = true;
+                  self.text3D.scale.z = self.text3D.scale.z / 300
+                  self.text3D.scale.x = self.text3D.scale.x / 2
+                  self.text3D.scale.y = self.text3D.scale.y / 2
+
+                  self.scene.add(self.text3D)
+            }
+        );
+    }
+
+    refreshText() {
+        this.createText();
     }
 
     initScene(){
@@ -155,15 +180,32 @@ class ARExperience{
         this.move()
         this.moveBalls()
         this.checkCollisions()
+        this.getPuntaje()
 
         this.renderer.render( this.scene, this.camera );
+    }
+
+    getPuntaje(){
+        var aux = 1;
+        for (let balloon = 0; balloon < this.spheres.length; balloon++) {
+            let b = this.spheres[balloon]
+            if(b.newValueCollision == true){
+                aux = aux + 1;
+            }
+        }
+        if (aux != this.puntaje){
+            this.puntaje = aux
+            this.refreshText()
+        }
     }
 
     checkCollisions(){
         for (let dardo = 0; dardo < this.meshes.length; dardo++) {
             let d = this.meshes[dardo]
+
             for (let balloon = 0; balloon < this.spheres.length; balloon++) {
                 let b = this.spheres[balloon]
+
                 let bMinX = b.position.x - 0.1
                 let bMaxX = b.position.x + 0.1
 
@@ -177,12 +219,12 @@ class ARExperience{
                     if(d.position.y > bMinY && d.position.y < bMaxY){
                         if(d.position.z > bMinZ && d.position.z < bMaxZ){
                             this.spheres[balloon].material.color.setHex( 0xffffff );
+                            this.spheres[balloon].newValueCollision = true
                         }
                     }
                 }
-                
-              }
-          }
+            }
+        }
     }
 
     move() {
@@ -200,6 +242,7 @@ class ARExperience{
             this.spheres[this.spheres.length - 1].position.x = Math.random() * (2 + 2) - 2;
             this.spheres[this.spheres.length - 1].position.y = 0;
             this.spheres[this.spheres.length - 1].position.z = Math.random() * (0 + 2) - 2;
+            this.spheres[this.spheres.length - 1].newValueCollision = false
         }
 
         this.frame += 1;
