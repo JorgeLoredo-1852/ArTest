@@ -55,7 +55,7 @@ class ARExperience{
             // ADD TEXT
             this.group = new THREE.Group();
 
-            this.scene.add( group );
+            this.scene.add( this.group );
 
             let textGeo = new TextGeometry( 'Hello World', {
                 size: 50,
