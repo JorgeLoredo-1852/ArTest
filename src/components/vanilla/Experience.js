@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { ARButton } from 'three/examples/jsm/webxr/ARButton.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import en from './Inter_Bold.json';
 
@@ -63,6 +64,10 @@ class ARExperience{
             this.createText()
 
 
+
+
+
+
             window.addEventListener('resize', this.resize.bind(this) );
         }
 	}	
@@ -82,9 +87,31 @@ class ARExperience{
     setupXR(){
         this.renderer.xr.enabled = true;
         const self = this;
+        const gltfLoader = new GLTFLoader();
+
         function onSelect(){
+
+            gltfLoader.load("/nave.glb", (gltf) => {
+                var mesh = gltf.scene
+                mesh.position.set(0,0,-0.3).applyMatrix4(self.controller.matrixWorld);
+                mesh.quaternion.setFromRotationMatrix(self.controller.matrixWorld);
+
+                mesh.userData.velocity = new THREE.Vector3();
+                mesh.position.copy( self.controller.position );
+                mesh.userData.velocity.x = (mesh.position.x - self.camera.position.x) * 0.07;
+                mesh.userData.velocity.y = (mesh.position.y - self.camera.position.y) * 0.07;
+                mesh.userData.velocity.z = -0.07;
+                mesh.userData.velocity.applyQuaternion( self.controller.quaternion );
+
+                mesh.scale.z = mesh.scale.z / 100;
+                mesh.scale.x = mesh.scale.x / 100;
+                mesh.scale.y = mesh.scale.y / 100;
+
+                self.scene.add(mesh);
+                self.meshes.push(mesh);
+            })
             
-            const mesh = new THREE.Mesh(
+            /*const mesh = new THREE.Mesh(
                 new THREE.SphereGeometry(0.03),
                 new THREE.MeshPhongMaterial({
                     color: 0xFFF111
@@ -109,7 +136,7 @@ class ARExperience{
 
 
             self.scene.add(mesh);
-            self.meshes.push(mesh);
+            self.meshes.push(mesh);*/
 
             //self.directions.push(self.camera.position);
         }
@@ -123,6 +150,13 @@ class ARExperience{
             ARButton.createButton(this.renderer)
         )
         //this.renderer.setAnimationLoop( this.render.bind(this) );
+    }
+
+    loadModel(){
+        const gltfLoader = new GLTFLoader();
+        gltfLoader.load("/nave.glb", (gltf) => {
+            this.scene.add(gltf.scene)
+        })
     }
 
     createText(){
@@ -225,7 +259,10 @@ class ARExperience{
                 if(d.position.x > bMinX && d.position.x < bMaxX){
                     if(d.position.y > bMinY && d.position.y < bMaxY){
                         if(d.position.z > bMinZ && d.position.z < bMaxZ){
-                            this.spheres[balloon].material.color.setHex( 0xffffff );
+                            //this.spheres[balloon].material.color.setHex( 0xffffff );
+                            this.spheres[balloon].scale.x = 0
+                            this.spheres[balloon].scale.y = 0
+                            this.spheres[balloon].scale.z = 0
                             this.spheres[balloon].newValueCollision = true
                         }
                     }
@@ -237,7 +274,21 @@ class ARExperience{
     move() {
 
         if(this.frame % 70 == 0){
-            const geometry = new THREE.SphereGeometry( 0.1, 32, 16 );
+            const gltfLoader = new GLTFLoader();
+            
+            gltfLoader.load("/gold_star.glb", (gltf) => {
+                var balloon = gltf.scene
+                this.spheres.push(balloon);
+                this.scene.add( this.spheres[this.spheres.length - 1] );
+                this.spheres[this.spheres.length - 1].position.x = Math.random() * (2 + 2) - 2;
+                this.spheres[this.spheres.length - 1].position.y = 0;
+                this.spheres[this.spheres.length - 1].position.z = Math.random() * (0 + 2) - 2;
+                this.spheres[this.spheres.length - 1].newValueCollision = false
+                
+
+            })
+        
+            /*const geometry = new THREE.SphereGeometry( 0.1, 32, 16 );
             const material = new THREE.MeshPhongMaterial({
                 color: 0xDD2B22
             })
@@ -249,7 +300,7 @@ class ARExperience{
             this.spheres[this.spheres.length - 1].position.x = Math.random() * (2 + 2) - 2;
             this.spheres[this.spheres.length - 1].position.y = 0;
             this.spheres[this.spheres.length - 1].position.z = Math.random() * (0 + 2) - 2;
-            this.spheres[this.spheres.length - 1].newValueCollision = false
+            this.spheres[this.spheres.length - 1].newValueCollision = false*/
         }
 
         this.frame += 1;
