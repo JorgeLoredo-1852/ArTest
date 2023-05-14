@@ -12,17 +12,20 @@ const ARComponents = () => {
         console.log("asdd")
     }, [])
     return (
-        <div
-            className="container3D"
-            style={{
-                width: "100vw",
-                height: "100vh",
-                overflow: 'hidden'
-            }}
-        >
-
+        <div style={{position:"relative"}}>
+            <div
+                className="container3D"
+                style={{
+                    zIndex:1,
+                    width: "100vw",
+                    height: "100vh",
+                    overflow: 'hidden'
+                }}
+            >
+            </div>
+            <div style={{position:"absolute", zIndex:10000, top:0}}>SADDJPASDIAJOA</div>
         </div>
-    )
-}
+      
+)}
 
 export default ARComponents;
