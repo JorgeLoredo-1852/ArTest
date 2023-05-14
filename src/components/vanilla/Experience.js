@@ -60,9 +60,6 @@ class ARExperience{
             this.text3D = null
             this.createText()
 
-            const axesHelper = new THREE.AxesHelper( 5 );
-            this.scene.add( axesHelper );
-
 
             window.addEventListener('resize', this.resize.bind(this) );
         }
@@ -191,6 +188,9 @@ class ARExperience{
 
     getPuntaje(){
         var aux = 1;
+        if(this.text3D){
+            this.text3D.position.set(0,0,-0.3).applyMatrix4(this.camera.matrixWorld);
+        }
         for (let balloon = 0; balloon < this.spheres.length; balloon++) {
             let b = this.spheres[balloon]
             if(b.newValueCollision == true){
