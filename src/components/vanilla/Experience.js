@@ -191,7 +191,7 @@ class ARExperience{
     getPuntaje(){
         var aux = 1;
         if(this.text3D){
-            this.text3D.position.set(0.02,-0.1,-0.12).applyMatrix4(this.camera.matrixWorld);
+            this.text3D.position.set(0.01,-0.04,-0.06).applyMatrix4(this.camera.matrixWorld);
         }
         for (let balloon = 0; balloon < this.spheres.length; balloon++) {
             let b = this.spheres[balloon]
