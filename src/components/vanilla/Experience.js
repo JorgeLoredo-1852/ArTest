@@ -51,7 +51,8 @@ class ARExperience{
 
             this.frame = 0
             this.spheres = [];
-            var cameraVector = new THREE.Vector3(); 
+            var cameraVector = new THREE.Vector3();
+            const clock = new THREE.Clock(); 
 
 
 
@@ -99,11 +100,12 @@ class ARExperience{
 			//mesh.userData.velocity.y = (mesh.position.y - self.camera.position.y) * 0.05 ;
 			//mesh.userData.velocity.z = self.camera.position.z * 0.05;
             mesh.position.copy( self.controller.position );
-			mesh.userData.velocity.x = (mesh.position.x - self.camera.position.x) * 0.05;
-			mesh.userData.velocity.y = (mesh.position.y - self.camera.position.y) * 0.05;
-			mesh.userData.velocity.z = -0.05;
+			mesh.userData.velocity.x = (mesh.position.x - self.camera.position.x) * 0.07;
+			mesh.userData.velocity.y = (mesh.position.y - self.camera.position.y) * 0.07;
+            mesh.userData.velocity.z = -0.07;
 			mesh.userData.velocity.applyQuaternion( self.controller.quaternion );
             
+
 
             self.scene.add(mesh);
             self.meshes.push(mesh);
@@ -124,6 +126,7 @@ class ARExperience{
 
     createText(){
         const self = this;
+
         var loader = new FontLoader();
         loader.load(
             '/Inter_Bold.json',
@@ -176,6 +179,7 @@ class ARExperience{
             this.meshes[step].position.set(this.meshes[step].position.x * 1.03, this.meshes[step].position.y * 1.03, this.meshes[step].position.z * 1.03)
         }*/
 
+        //this.delta = this.clock.getDelta() * 0.8; // slow down simulation
 
 
         this.move()
@@ -251,7 +255,7 @@ class ARExperience{
 
         this.frame += 1;
         for (let step = 0; step < this.spheres.length; step++) {
-            this.spheres[step].translateY( 0.004 );
+            this.spheres[step].translateY( 0.006 );
           }
       }
 

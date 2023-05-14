@@ -12,7 +12,6 @@ const ARComponents = () => {
         console.log("asdd")
     }, [])
     return (
-        <div style={{position:"relative"}}>
             <div
                 className="container3D"
                 style={{
@@ -23,8 +22,6 @@ const ARComponents = () => {
                 }}
             >
             </div>
-            <div style={{position:"absolute", zIndex:10000, top:0}}>SADDJPASDIAJOA</div>
-        </div>
       
 )}
 
