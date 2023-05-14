@@ -98,11 +98,15 @@ class ARExperience{
             
 
             mesh.userData.velocity = new THREE.Vector3();
-			mesh.userData.velocity.x = (mesh.position.x - self.camera.position.x) * 0.05 ;
-			mesh.userData.velocity.y = (mesh.position.y - self.camera.position.y) * 0.05 ;
-			mesh.userData.velocity.z = self.camera.position.z * 0.05;
+			//mesh.userData.velocity.x = (mesh.position.x - self.camera.position.x) * 0.05 ;
+			//mesh.userData.velocity.y = (mesh.position.y - self.camera.position.y) * 0.05 ;
+			//mesh.userData.velocity.z = self.camera.position.z * 0.05;
+            mesh.position.copy( self.controller.position );
+			mesh.userData.velocity.x = (mesh.position.x - self.camera.position.x) * 0.05;
+			mesh.userData.velocity.y = (mesh.position.y - self.camera.position.y) * 0.05;
+			mesh.userData.velocity.z = -0.05;
+			mesh.userData.velocity.applyQuaternion( self.controller.quaternion );
             
-            mesh.userData.velocity.applyQuaternion( self.controller.quaternion );
 
             self.scene.add(mesh);
             self.meshes.push(mesh);
