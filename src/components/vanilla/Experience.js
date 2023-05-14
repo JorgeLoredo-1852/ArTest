@@ -133,12 +133,12 @@ class ARExperience{
             function(res) {
                 var textGeo = new TextGeometry(self.puntaje.toString(), {
                     font: res,
-                    size: 40 / 500,
+                    size: 40 / 1100,
                     height: 0.005,
                     curveSegments: 10,
                     bevelEnabled: true,
                     bevelThickness: 1,
-                    bevelSize: 1.8 / 300,
+                    bevelSize: 1.8 / 400,
                     bevelOffset: 0,
                     bevelSegments: 5,
                     bevelEnabled: true
@@ -150,8 +150,6 @@ class ARExperience{
 
                   var cubeMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
                   self.text3D = new THREE.Mesh(textGeo, cubeMat);
-                  self.text3D.position.x = -textGeo.boundingBox.max.x / 2;
-                  self.text3D.position.z = -0.3
                   self.text3D.castShadow = true;
                   self.text3D.scale.z = self.text3D.scale.z / 300
                   self.text3D.scale.x = self.text3D.scale.x / 2
@@ -193,7 +191,7 @@ class ARExperience{
     getPuntaje(){
         var aux = 1;
         if(this.text3D){
-            this.text3D.position.set(0,0,-0.3).applyMatrix4(this.camera.matrixWorld);
+            this.text3D.position.set(0.02,-0.1,-0.12).applyMatrix4(this.camera.matrixWorld);
         }
         for (let balloon = 0; balloon < this.spheres.length; balloon++) {
             let b = this.spheres[balloon]
@@ -237,7 +235,7 @@ class ARExperience{
 
     move() {
 
-        if(this.frame % 100 == 0){
+        if(this.frame % 70 == 0){
             const geometry = new THREE.SphereGeometry( 0.1, 32, 16 );
             const material = new THREE.MeshPhongMaterial({
                 color: 0xDD2B22
