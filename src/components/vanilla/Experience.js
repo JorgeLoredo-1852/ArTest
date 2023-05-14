@@ -133,7 +133,7 @@ class ARExperience{
             function(res) {
                 var textGeo = new TextGeometry(self.puntaje.toString(), {
                     font: res,
-                    size: 40 / 1100,
+                    size: 40 / 400,
                     height: 0.005,
                     curveSegments: 10,
                     bevelEnabled: true,
@@ -191,7 +191,7 @@ class ARExperience{
     getPuntaje(){
         var aux = 1;
         if(this.text3D){
-            this.text3D.position.set(0.01,-0.04,-0.06).applyMatrix4(this.camera.matrixWorld);
+            this.text3D.position.set(0.01,-0.04,-1).applyMatrix4(this.camera.matrixWorld);
         }
         for (let balloon = 0; balloon < this.spheres.length; balloon++) {
             let b = this.spheres[balloon]
