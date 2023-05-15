@@ -91,7 +91,7 @@ class ARExperience{
 
         function onSelect(){
 
-            gltfLoader.load("/nave.glb", (gltf) => {
+            gltfLoader.load("/dart.glb", (gltf) => {
                 var mesh = gltf.scene
                 mesh.position.set(0,0,-0.3).applyMatrix4(self.controller.matrixWorld);
                 mesh.quaternion.setFromRotationMatrix(self.controller.matrixWorld);
@@ -103,9 +103,9 @@ class ARExperience{
                 mesh.userData.velocity.z = -0.07;
                 mesh.userData.velocity.applyQuaternion( self.controller.quaternion );
 
-                mesh.scale.z = mesh.scale.z / 100;
-                mesh.scale.x = mesh.scale.x / 100;
-                mesh.scale.y = mesh.scale.y / 100;
+                mesh.scale.z = mesh.scale.z / 50;
+                mesh.scale.x = mesh.scale.x / 50;
+                mesh.scale.y = mesh.scale.y / 50;
 
                 self.scene.add(mesh);
                 self.meshes.push(mesh);
