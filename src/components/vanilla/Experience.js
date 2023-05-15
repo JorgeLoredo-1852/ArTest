@@ -276,7 +276,7 @@ class ARExperience{
         if(this.frame % 70 == 0){
             const gltfLoader = new GLTFLoader();
             
-            gltfLoader.load("/gold_star.glb", (gltf) => {
+            gltfLoader.load("/balloon.glb", (gltf) => {
                 var balloon = gltf.scene
                 this.spheres.push(balloon);
                 this.scene.add( this.spheres[this.spheres.length - 1] );
